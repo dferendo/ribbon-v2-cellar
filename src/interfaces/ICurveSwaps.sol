@@ -5,7 +5,8 @@ pragma solidity 0.8.15;
  * @notice Partial interface for a Curve Registry Exchanges contract
  * @dev The registry exchange contract is used to find pools and query exchange rates for token swaps.
  *      It also provides a unified exchange API that can be useful for on-chain integrators.
- **/
+ *
+ */
 interface ICurveSwaps {
     /**
      * @notice Perform up to four swaps in a single transaction
@@ -21,7 +22,8 @@ interface ICurveSwaps {
      *                     and 5 for Polygon factory metapools `exchange_underlying`
      * @param _expected The minimum amount received after the final swap.
      * @return Received amount of final output token
-     **/
+     *
+     */
     function exchange_multiple(
         address[9] memory _route,
         uint256[3][4] memory _swap_params,

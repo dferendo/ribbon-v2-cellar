@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.0;
 
-import { ERC20 } from "@solmate/tokens/ERC20.sol";
-import { SafeTransferLib } from "@solmate/utils/SafeTransferLib.sol";
-import { Math } from "../utils/Math.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {SafeTransferLib} from "@solmate/utils/SafeTransferLib.sol";
+import {Math} from "../utils/Math.sol";
 
 /// @notice Minimal ERC4626 tokenized Vault implementation.
 /// @author Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/mixins/ERC4626.sol)
@@ -18,11 +18,7 @@ abstract contract ERC4626 is ERC20 {
     event Deposit(address indexed caller, address indexed owner, uint256 assets, uint256 shares);
 
     event Withdraw(
-        address indexed caller,
-        address indexed receiver,
-        address indexed owner,
-        uint256 assets,
-        uint256 shares
+        address indexed caller, address indexed receiver, address indexed owner, uint256 assets, uint256 shares
     );
 
     /*//////////////////////////////////////////////////////////////
@@ -31,12 +27,9 @@ abstract contract ERC4626 is ERC20 {
 
     ERC20 public asset;
 
-    constructor(
-        ERC20 _asset,
-        string memory _name,
-        string memory _symbol,
-        uint8 _decimals
-    ) ERC20(_name, _symbol, _decimals) {
+    constructor(ERC20 _asset, string memory _name, string memory _symbol, uint8 _decimals)
+        ERC20(_name, _symbol, _decimals)
+    {
         asset = _asset;
     }
 
@@ -75,11 +68,7 @@ abstract contract ERC4626 is ERC20 {
         afterDeposit(assets, shares, receiver);
     }
 
-    function withdraw(
-        uint256 assets,
-        address receiver,
-        address owner
-    ) public virtual returns (uint256 shares) {
+    function withdraw(uint256 assets, address receiver, address owner) public virtual returns (uint256 shares) {
         shares = previewWithdraw(assets); // No need to check for rounding error, previewWithdraw rounds up.
 
         if (msg.sender != owner) {
@@ -99,11 +88,7 @@ abstract contract ERC4626 is ERC20 {
         afterWithdraw(assets, shares, receiver, owner);
     }
 
-    function redeem(
-        uint256 shares,
-        address receiver,
-        address owner
-    ) public virtual returns (uint256 assets) {
+    function redeem(uint256 shares, address receiver, address owner) public virtual returns (uint256 assets) {
         if (msg.sender != owner) {
             uint256 allowed = allowance[owner][msg.sender]; // Saves gas for limited approvals.
 
@@ -186,29 +171,11 @@ abstract contract ERC4626 is ERC20 {
                           INTERNAL HOOKS LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    function beforeDeposit(
-        uint256 assets,
-        uint256 shares,
-        address receiver
-    ) internal virtual {}
+    function beforeDeposit(uint256 assets, uint256 shares, address receiver) internal virtual {}
 
-    function afterDeposit(
-        uint256 assets,
-        uint256 shares,
-        address receiver
-    ) internal virtual {}
+    function afterDeposit(uint256 assets, uint256 shares, address receiver) internal virtual {}
 
-    function beforeWithdraw(
-        uint256 assets,
-        uint256 shares,
-        address receiver,
-        address owner
-    ) internal virtual {}
+    function beforeWithdraw(uint256 assets, uint256 shares, address receiver, address owner) internal virtual {}
 
-    function afterWithdraw(
-        uint256 assets,
-        uint256 shares,
-        address receiver,
-        address owner
-    ) internal virtual {}
+    function afterWithdraw(uint256 assets, uint256 shares, address receiver, address owner) internal virtual {}
 }

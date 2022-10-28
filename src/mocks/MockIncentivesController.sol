@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { MockStkAAVE } from "./MockStkAAVE.sol";
+import {MockStkAAVE} from "./MockStkAAVE.sol";
 
 contract MockIncentivesController {
     MockStkAAVE public stkAAVE;
@@ -16,11 +16,7 @@ contract MockIncentivesController {
         usersUnclaimedRewards[account] += amount;
     }
 
-    function claimRewards(
-        address[] calldata,
-        uint256 amount,
-        address to
-    ) external returns (uint256) {
+    function claimRewards(address[] calldata, uint256 amount, address to) external returns (uint256) {
         uint256 claimable = usersUnclaimedRewards[to];
 
         if (amount > claimable) {

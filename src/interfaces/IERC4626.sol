@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import { IERC20 } from "./IERC20.sol";
+import {IERC20} from "./IERC20.sol";
 
 /// @title ERC4626 interface
 /// From: https://github.com/fei-protocol/ERC4626/blob/main/src/interfaces/IERC4626.sol
@@ -45,19 +45,11 @@ interface IERC4626 is IERC20 {
 
     /// @notice Redeems `shares` from `owner` and sends `assets`
     /// of underlying tokens to `receiver`.
-    function withdraw(
-        uint256 assets,
-        address receiver,
-        address owner
-    ) external returns (uint256 shares);
+    function withdraw(uint256 assets, address receiver, address owner) external returns (uint256 shares);
 
     /// @notice Redeems `shares` from `owner` and sends `assets`
     /// of underlying tokens to `receiver`.
-    function redeem(
-        uint256 shares,
-        address receiver,
-        address owner
-    ) external returns (uint256 assets);
+    function redeem(uint256 shares, address receiver, address owner) external returns (uint256 assets);
 
     /*////////////////////////////////////////////////////////
                       Vault Accounting Logic

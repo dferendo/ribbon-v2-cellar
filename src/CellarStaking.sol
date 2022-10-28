@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { ERC20 } from "@solmate/tokens/ERC20.sol";
-import { SafeTransferLib } from "@solmate/utils/SafeTransferLib.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { ICellarStaking } from "./interfaces/ICellarStaking.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {SafeTransferLib} from "@solmate/utils/SafeTransferLib.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ICellarStaking} from "./interfaces/ICellarStaking.sol";
 
 import "./Errors.sol";
 
@@ -226,7 +226,7 @@ contract CellarStaking is ICellarStaking, Ownable {
         }
 
         // Do share accounting and populate user stake information
-        (uint256 boost, ) = _getBoost(lock);
+        (uint256 boost,) = _getBoost(lock);
         uint256 amountWithBoost = amount + ((amount * boost) / ONE);
 
         stakes[msg.sender].push(
@@ -352,7 +352,7 @@ contract CellarStaking is ICellarStaking, Ownable {
         _updateRewardForStake(msg.sender, depositId);
 
         // Reinstate
-        (uint256 boost, ) = _getBoost(s.lock);
+        (uint256 boost,) = _getBoost(s.lock);
         uint256 depositAmountIncreased = (s.amount * boost) / ONE;
         uint256 amountWithBoost = s.amount + depositAmountIncreased;
 
@@ -706,7 +706,7 @@ contract CellarStaking is ICellarStaking, Ownable {
      * @notice Gets all of a user's stakes.
      * @dev This is provided because Solidity converts public arrays into index getters,
      *      but we need a way to allow external contracts and users to access the whole array.
-
+     * 
      * @param user                      The user whose stakes to get.
      *
      * @return stakes                   Array of all user's stakes

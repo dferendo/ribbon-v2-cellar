@@ -3,7 +3,8 @@ pragma solidity 0.8.15;
 
 /**
  * @notice Partial interface for a SushiSwap Router contract
- **/
+ *
+ */
 interface ISushiSwapRouter {
     /**
      * @notice Swaps an exact amount of input tokens for as many output tokens as possible, along the route determined by the `path`
@@ -16,7 +17,8 @@ interface ISushiSwapRouter {
      * @param to Recipient of the output tokens
      * @param deadline Unix timestamp after which the transaction will revert
      * @return amounts The input token amount and all subsequent output token amounts
-     **/
+     *
+     */
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,

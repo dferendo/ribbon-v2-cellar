@@ -2,9 +2,5 @@
 pragma solidity 0.8.15;
 
 interface IGravity {
-    function sendToCosmos(
-        address _tokenContract,
-        bytes32 _destination,
-        uint256 _amount
-    ) external;
+    function sendToCosmos(address _tokenContract, bytes32 _destination, uint256 _amount) external;
 }

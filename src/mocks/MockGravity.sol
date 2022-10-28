@@ -1,18 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { ERC20 } from "@solmate/tokens/ERC20.sol";
-import { SafeTransferLib } from "@solmate/utils/SafeTransferLib.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {SafeTransferLib} from "@solmate/utils/SafeTransferLib.sol";
 
 contract MockGravity {
     using SafeTransferLib for ERC20;
+
     error InvalidSendToCosmos();
 
-    function sendToCosmos(
-        address _tokenContract,
-        bytes32,
-        uint256 _amount
-    ) external {
+    function sendToCosmos(address _tokenContract, bytes32, uint256 _amount) external {
         // we snapshot our current balance of this token
         uint256 ourStartingBalance = ERC20(_tokenContract).balanceOf(address(this));
 

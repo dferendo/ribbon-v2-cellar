@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { ERC4626, ERC20, SafeTransferLib } from "./base/ERC4626.sol";
-import { Multicall } from "./base/Multicall.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { IAaveV2StablecoinCellar } from "./interfaces/IAaveV2StablecoinCellar.sol";
-import { IAaveIncentivesController } from "./interfaces/IAaveIncentivesController.sol";
-import { IStakedTokenV2 } from "./interfaces/IStakedTokenV2.sol";
-import { ICurveSwaps } from "./interfaces/ICurveSwaps.sol";
-import { ISushiSwapRouter } from "./interfaces/ISushiSwapRouter.sol";
-import { IGravity } from "./interfaces/IGravity.sol";
-import { ILendingPool } from "./interfaces/ILendingPool.sol";
-import { Math } from "./utils/Math.sol";
+import {ERC4626, ERC20, SafeTransferLib} from "./base/ERC4626.sol";
+import {Multicall} from "./base/Multicall.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {IAaveV2StablecoinCellar} from "./interfaces/IAaveV2StablecoinCellar.sol";
+import {IAaveIncentivesController} from "./interfaces/IAaveIncentivesController.sol";
+import {IStakedTokenV2} from "./interfaces/IStakedTokenV2.sol";
+import {ICurveSwaps} from "./interfaces/ICurveSwaps.sol";
+import {ISushiSwapRouter} from "./interfaces/ISushiSwapRouter.sol";
+import {IGravity} from "./interfaces/IGravity.sol";
+import {ILendingPool} from "./interfaces/ILendingPool.sol";
+import {Math} from "./utils/Math.sol";
 
 import "./Errors.sol";
 
@@ -299,12 +299,14 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
         uint8 _assetDecimals = _updatePosition(_asset);
 
         // Initialize limits.
-        uint256 powOfAssetDecimals = 10**_assetDecimals;
+        uint256 powOfAssetDecimals = 10 ** _assetDecimals;
         liquidityLimit = 5_000_000 * powOfAssetDecimals;
         depositLimit = type(uint256).max;
 
         // Initialize approved positions.
-        for (uint256 i; i < _approvedPositions.length; i++) isTrusted[_approvedPositions[i]] = true;
+        for (uint256 i; i < _approvedPositions.length; i++) {
+            isTrusted[_approvedPositions[i]] = true;
+        }
 
         // Initialize starting timestamp for first accrual.
         lastAccrual = uint32(block.timestamp);
@@ -367,12 +369,7 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
      *      current lending position if needed.
      * @param assets amount of assets to withdraw
      */
-    function beforeWithdraw(
-        uint256 assets,
-        uint256,
-        address,
-        address
-    ) internal override {
+    function beforeWithdraw(uint256 assets, uint256, address, address) internal override {
         ERC20 currentPosition = asset;
         uint256 holdings = totalHoldings();
 
@@ -428,9 +425,8 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
     function convertToAssets(uint256 shares) public view override returns (uint256 assets) {
         uint256 totalShares = totalSupply;
 
-        assets = totalShares == 0
-            ? shares.changeDecimals(18, assetDecimals)
-            : shares.mulDivDown(totalAssets(), totalShares);
+        assets =
+            totalShares == 0 ? shares.changeDecimals(18, assetDecimals) : shares.mulDivDown(totalAssets(), totalShares);
     }
 
     /**
@@ -441,9 +437,8 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
     function convertToShares(uint256 assets) public view override returns (uint256 shares) {
         uint256 totalShares = totalSupply;
 
-        shares = totalShares == 0
-            ? assets.changeDecimals(assetDecimals, 18)
-            : assets.mulDivDown(totalShares, totalAssets());
+        shares =
+            totalShares == 0 ? assets.changeDecimals(assetDecimals, 18) : assets.mulDivDown(totalShares, totalAssets());
     }
 
     /**
@@ -454,9 +449,8 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
     function previewMint(uint256 shares) public view override returns (uint256 assets) {
         uint256 totalShares = totalSupply;
 
-        assets = totalShares == 0
-            ? shares.changeDecimals(18, assetDecimals)
-            : shares.mulDivUp(totalAssets(), totalShares);
+        assets =
+            totalShares == 0 ? shares.changeDecimals(18, assetDecimals) : shares.mulDivUp(totalAssets(), totalShares);
     }
 
     /**
@@ -467,9 +461,8 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
     function previewWithdraw(uint256 assets) public view override returns (uint256 shares) {
         uint256 totalShares = totalSupply;
 
-        shares = totalShares == 0
-            ? assets.changeDecimals(assetDecimals, 18)
-            : assets.mulDivUp(totalShares, totalAssets());
+        shares =
+            totalShares == 0 ? assets.changeDecimals(assetDecimals, 18) : assets.mulDivUp(totalShares, totalAssets());
     }
 
     // ========================================= LIMITS LOGIC =========================================
@@ -484,14 +477,12 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
 
         uint256 asssetDepositLimit = depositLimit;
         uint256 asssetLiquidityLimit = liquidityLimit;
-        if (asssetDepositLimit == type(uint256).max && asssetLiquidityLimit == type(uint256).max)
+        if (asssetDepositLimit == type(uint256).max && asssetLiquidityLimit == type(uint256).max) {
             return type(uint256).max;
+        }
 
-        (uint256 leftUntilDepositLimit, uint256 leftUntilLiquidityLimit) = _getAssetsLeftUntilLimits(
-            asssetDepositLimit,
-            asssetLiquidityLimit,
-            receiver
-        );
+        (uint256 leftUntilDepositLimit, uint256 leftUntilLiquidityLimit) =
+            _getAssetsLeftUntilLimits(asssetDepositLimit, asssetLiquidityLimit, receiver);
 
         // Only return the more relevant of the two.
         assets = Math.min(leftUntilDepositLimit, leftUntilLiquidityLimit);
@@ -507,24 +498,22 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
 
         uint256 asssetDepositLimit = depositLimit;
         uint256 asssetLiquidityLimit = liquidityLimit;
-        if (asssetDepositLimit == type(uint256).max && asssetLiquidityLimit == type(uint256).max)
+        if (asssetDepositLimit == type(uint256).max && asssetLiquidityLimit == type(uint256).max) {
             return type(uint256).max;
+        }
 
-        (uint256 leftUntilDepositLimit, uint256 leftUntilLiquidityLimit) = _getAssetsLeftUntilLimits(
-            asssetDepositLimit,
-            asssetLiquidityLimit,
-            receiver
-        );
+        (uint256 leftUntilDepositLimit, uint256 leftUntilLiquidityLimit) =
+            _getAssetsLeftUntilLimits(asssetDepositLimit, asssetLiquidityLimit, receiver);
 
         // Only return the more relevant of the two.
         shares = convertToShares(Math.min(leftUntilDepositLimit, leftUntilLiquidityLimit));
     }
 
-    function _getAssetsLeftUntilLimits(
-        uint256 asssetDepositLimit,
-        uint256 asssetLiquidityLimit,
-        address receiver
-    ) internal view returns (uint256 leftUntilDepositLimit, uint256 leftUntilLiquidityLimit) {
+    function _getAssetsLeftUntilLimits(uint256 asssetDepositLimit, uint256 asssetLiquidityLimit, address receiver)
+        internal
+        view
+        returns (uint256 leftUntilDepositLimit, uint256 leftUntilLiquidityLimit)
+    {
         uint256 totalAssetsIncludingUnrealizedGains = assetAToken.balanceOf(address(this)) + totalHoldings();
 
         // Convert receiver's shares to assets using total assets including locked yield.
@@ -554,7 +543,7 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
         if (msg.sender != owner() && totalLockedYield > 0) revert STATE_AccrualOngoing();
 
         // Compute and store current exchange rate between assets and shares for gas efficiency.
-        uint256 oneAsset = 10**assetDecimals;
+        uint256 oneAsset = 10 ** assetDecimals;
         uint256 exchangeRate = convertToShares(oneAsset);
 
         // Get balance since last accrual and updated balance for this accrual.
@@ -645,20 +634,20 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
      * @notice Rebalances current assets into a new position.
      * @param route array of [initial token, pool, token, pool, token, ...] that specifies the swap route on Curve.
      * @param swapParams multidimensional array of [i, j, swap type] where i and j are the correct
-                         values for the n'th pool in `_route` and swap type should be 1 for a
-                         stableswap `exchange`, 2 for stableswap `exchange_underlying`, 3 for a
-                         cryptoswap `exchange`, 4 for a cryptoswap `exchange_underlying` and 5 for
-                         Polygon factory metapools `exchange_underlying`
+     *                      values for the n'th pool in `_route` and swap type should be 1 for a
+     *                      stableswap `exchange`, 2 for stableswap `exchange_underlying`, 3 for a
+     *                      cryptoswap `exchange`, 4 for a cryptoswap `exchange_underlying` and 5 for
+     *                      Polygon factory metapools `exchange_underlying`
      * @param minAssetsOut minimum amount of assets received after swap
      */
-    function rebalance(
-        address[9] memory route,
-        uint256[3][4] memory swapParams,
-        uint256 minAssetsOut
-    ) external whenNotShutdown onlyOwner {
+    function rebalance(address[9] memory route, uint256[3][4] memory swapParams, uint256 minAssetsOut)
+        external
+        whenNotShutdown
+        onlyOwner
+    {
         // Retrieve the last token in the route and store it as the new asset position.
         ERC20 newPosition;
-        for (uint256 i; ; i += 2) {
+        for (uint256 i;; i += 2) {
             if (i == 8 || route[i + 1] == address(0)) {
                 newPosition = ERC20(route[i]);
                 break;
@@ -684,12 +673,8 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
 
         // Perform stablecoin swap using Curve.
         oldPosition.safeApprove(address(curveRegistryExchange), assetsBeforeSwap);
-        uint256 assetsAfterSwap = curveRegistryExchange.exchange_multiple(
-            route,
-            swapParams,
-            assetsBeforeSwap,
-            minAssetsOut
-        );
+        uint256 assetsAfterSwap =
+            curveRegistryExchange.exchange_multiple(route, swapParams, assetsBeforeSwap, minAssetsOut);
 
         uint8 oldPositionDecimals = assetDecimals;
 
@@ -707,8 +692,7 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
         // and this rebalance will not effect the exchange rate of shares to assets. Otherwise, the
         // losses from this rebalance will be realized and factored into the new balance.
         uint256 newTotalBalance = Math.min(
-            totalBalanceIncludingHoldings.changeDecimals(oldPositionDecimals, newPositionDecimals),
-            assetsAfterSwap
+            totalBalanceIncludingHoldings.changeDecimals(oldPositionDecimals, newPositionDecimals), assetsAfterSwap
         );
 
         totalBalance = newTotalBalance;
@@ -716,10 +700,8 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
         // Keep high watermark at level it should be at before rebalance because otherwise swap
         // losses from this rebalance would not be counted in the next accrual. Include holdings
         // into new high watermark balance as those have all been deposited into Aave now.
-        highWatermarkBalance = (highWatermarkBalance + totalAssetsInHolding).changeDecimals(
-            oldPositionDecimals,
-            newPositionDecimals
-        );
+        highWatermarkBalance =
+            (highWatermarkBalance + totalAssetsInHolding).changeDecimals(oldPositionDecimals, newPositionDecimals);
 
         emit Rebalance(address(oldPosition), address(newPosition), newTotalBalance);
     }
@@ -766,13 +748,8 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
 
         // Perform a multihop swap using Sushiswap.
         AAVE.safeApprove(address(sushiswapRouter), rewardsIn);
-        uint256[] memory amounts = sushiswapRouter.swapExactTokensForTokens(
-            rewardsIn,
-            minAssetsOut,
-            path,
-            address(this),
-            block.timestamp + 60
-        );
+        uint256[] memory amounts =
+            sushiswapRouter.swapExactTokensForTokens(rewardsIn, minAssetsOut, path, address(this), block.timestamp + 60);
 
         uint256 assetsOut = amounts[amounts.length - 1];
 
@@ -821,8 +798,9 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
      */
     function sweep(ERC20 token, address to) external onlyOwner {
         // Prevent sweeping of assets managed by the cellar and shares minted to the cellar as fees.
-        if (token == asset || token == assetAToken || token == this || address(token) == address(stkAAVE))
+        if (token == asset || token == assetAToken || token == this || address(token) == address(stkAAVE)) {
             revert USR_ProtectedAsset(address(token));
+        }
 
         // Transfer out tokens in this cellar that shouldn't be here.
         uint256 amount = token.balanceOf(address(this));
@@ -886,7 +864,7 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
      */
     function _updatePosition(ERC20 newPosition) internal returns (uint8 newAssetDecimals) {
         // Retrieve the aToken that will represent the cellar's new position on Aave.
-        (, , , , , , , address aTokenAddress, , , , ) = lendingPool.getReserveData(address(newPosition));
+        (,,,,,,, address aTokenAddress,,,,) = lendingPool.getReserveData(address(newPosition));
 
         // If the address is not null, it is supported by Aave.
         if (aTokenAddress == address(0)) revert USR_UnsupportedPosition(address(newPosition));
@@ -902,11 +880,13 @@ contract AaveV2StablecoinCellar is IAaveV2StablecoinCellar, ERC4626, Multicall, 
         if (oldAssetDecimals != 0 && oldAssetDecimals != newAssetDecimals) {
             uint256 asssetDepositLimit = depositLimit;
             uint256 asssetLiquidityLimit = liquidityLimit;
-            if (asssetDepositLimit != type(uint256).max)
+            if (asssetDepositLimit != type(uint256).max) {
                 depositLimit = asssetDepositLimit.changeDecimals(oldAssetDecimals, newAssetDecimals);
+            }
 
-            if (asssetLiquidityLimit != type(uint256).max)
+            if (asssetLiquidityLimit != type(uint256).max) {
                 liquidityLimit = asssetLiquidityLimit.changeDecimals(oldAssetDecimals, newAssetDecimals);
+            }
         }
 
         // Update state related to the current position.

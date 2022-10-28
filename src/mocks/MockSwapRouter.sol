@@ -1,15 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { ERC20 } from "@solmate/tokens/ERC20.sol";
-import { Math } from "src/utils/Math.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {Math} from "src/utils/Math.sol";
 
 library BytesLib {
-    function slice(
-        bytes memory _bytes,
-        uint256 _start,
-        uint256 _length
-    ) internal pure returns (bytes memory) {
+    function slice(bytes memory _bytes, uint256 _start, uint256 _length) internal pure returns (bytes memory) {
         require(_length + 31 >= _length, "slice_overflow");
         require(_start + _length >= _start, "slice_overflow");
         require(_bytes.length >= _start + _length, "slice_outOfBounds");
@@ -47,9 +43,7 @@ library BytesLib {
                 } lt(mc, end) {
                     mc := add(mc, 0x20)
                     cc := add(cc, 0x20)
-                } {
-                    mstore(mc, mload(cc))
-                }
+                } { mstore(mc, mload(cc)) }
 
                 mstore(tempBytes, _length)
 
@@ -124,15 +118,7 @@ library Path {
     /// @return tokenA The first token of the given pool
     /// @return tokenB The second token of the given pool
     /// @return fee The fee level of the pool
-    function decodeFirstPool(bytes memory path)
-        internal
-        pure
-        returns (
-            address tokenA,
-            address tokenB,
-            uint24 fee
-        )
-    {
+    function decodeFirstPool(bytes memory path) internal pure returns (address tokenA, address tokenB, uint24 fee) {
         tokenA = path.toAddress(0);
         fee = path.toUint24(ADDR_SIZE);
         tokenB = path.toAddress(NEXT_OFFSET);
@@ -194,11 +180,11 @@ contract MockSwapRouter {
     }
 
     function exactInput(ExactInputParams memory params) external payable returns (uint256) {
-        (address tokenIn, address tokenOut, ) = params.path.decodeFirstPool();
+        (address tokenIn, address tokenOut,) = params.path.decodeFirstPool();
 
         while (params.path.hasMultiplePools()) {
             params.path = params.path.skipToken();
-            (, tokenOut, ) = params.path.decodeFirstPool();
+            (, tokenOut,) = params.path.decodeFirstPool();
         }
 
         ERC20(tokenIn).transferFrom(msg.sender, address(this), params.amountIn);
@@ -243,16 +229,14 @@ contract MockSwapRouter {
         return amounts;
     }
 
-    function exchange_multiple(
-        address[9] memory _route,
-        uint256[3][4] memory,
-        uint256 _amount,
-        uint256 _expected
-    ) external returns (uint256) {
+    function exchange_multiple(address[9] memory _route, uint256[3][4] memory, uint256 _amount, uint256 _expected)
+        external
+        returns (uint256)
+    {
         address tokenIn = _route[0];
 
         address tokenOut;
-        for (uint256 i; ; i += 2) {
+        for (uint256 i;; i += 2) {
             if (i == 8 || _route[i + 1] == address(0)) {
                 tokenOut = _route[i];
                 break;

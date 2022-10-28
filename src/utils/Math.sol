@@ -12,17 +12,13 @@ library Math {
     /**
      * @notice Used to change the decimals of precision used for an amount.
      */
-    function changeDecimals(
-        uint256 amount,
-        uint8 fromDecimals,
-        uint8 toDecimals
-    ) internal pure returns (uint256) {
+    function changeDecimals(uint256 amount, uint8 fromDecimals, uint8 toDecimals) internal pure returns (uint256) {
         if (fromDecimals == toDecimals) {
             return amount;
         } else if (fromDecimals < toDecimals) {
-            return amount * 10**(toDecimals - fromDecimals);
+            return amount * 10 ** (toDecimals - fromDecimals);
         } else {
-            return amount / 10**(fromDecimals - toDecimals);
+            return amount / 10 ** (fromDecimals - toDecimals);
         }
     }
 
@@ -40,38 +36,26 @@ library Math {
         return mulDivDown(x, y, WAD); // Equivalent to (x * y) / WAD rounded down.
     }
 
-    function mulDivDown(
-        uint256 x,
-        uint256 y,
-        uint256 denominator
-    ) internal pure returns (uint256 z) {
+    function mulDivDown(uint256 x, uint256 y, uint256 denominator) internal pure returns (uint256 z) {
         assembly {
             // Store x * y in z for now.
             z := mul(x, y)
 
             // Equivalent to require(denominator != 0 && (x == 0 || (x * y) / x == y))
-            if iszero(and(iszero(iszero(denominator)), or(iszero(x), eq(div(z, x), y)))) {
-                revert(0, 0)
-            }
+            if iszero(and(iszero(iszero(denominator)), or(iszero(x), eq(div(z, x), y)))) { revert(0, 0) }
 
             // Divide z by the denominator.
             z := div(z, denominator)
         }
     }
 
-    function mulDivUp(
-        uint256 x,
-        uint256 y,
-        uint256 denominator
-    ) internal pure returns (uint256 z) {
+    function mulDivUp(uint256 x, uint256 y, uint256 denominator) internal pure returns (uint256 z) {
         assembly {
             // Store x * y in z for now.
             z := mul(x, y)
 
             // Equivalent to require(denominator != 0 && (x == 0 || (x * y) / x == y))
-            if iszero(and(iszero(iszero(denominator)), or(iszero(x), eq(div(z, x), y)))) {
-                revert(0, 0)
-            }
+            if iszero(and(iszero(iszero(denominator)), or(iszero(x), eq(div(z, x), y)))) { revert(0, 0) }
 
             // First, divide z - 1 by the denominator and add 1.
             // We allow z - 1 to underflow if z is 0, because we multiply the

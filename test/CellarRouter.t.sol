@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { ERC20 } from "@solmate/tokens/ERC20.sol";
-import { ERC4626 } from "src/base/ERC4626.sol";
-import { CellarRouter } from "src/CellarRouter.sol";
-import { ISwapRouter as IUniswapV3Router } from "src/interfaces/ISwapRouter.sol";
-import { IUniswapV2Router02 as IUniswapV2Router } from "src/interfaces/IUniswapV2Router02.sol";
-import { MockERC20 } from "src/mocks/MockERC20.sol";
-import { MockERC4626 } from "src/mocks/MockERC4626.sol";
-import { MockSwapRouter } from "src/mocks/MockSwapRouter.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {ERC4626} from "src/base/ERC4626.sol";
+import {CellarRouter} from "src/CellarRouter.sol";
+import {ISwapRouter as IUniswapV3Router} from "src/interfaces/ISwapRouter.sol";
+import {IUniswapV2Router02 as IUniswapV2Router} from "src/interfaces/IUniswapV2Router02.sol";
+import {MockERC20} from "src/mocks/MockERC20.sol";
+import {MockERC4626} from "src/mocks/MockERC4626.sol";
+import {MockSwapRouter} from "src/mocks/MockSwapRouter.sol";
 
-import { Test, console } from "@forge-std/Test.sol";
-import { Math } from "src/utils/Math.sol";
+import {Test, console} from "@forge-std/Test.sol";
+import {Math} from "src/utils/Math.sol";
 
 contract CellarRouterTest is Test {
     using Math for uint256;
@@ -107,14 +107,8 @@ contract CellarRouterTest is Test {
         vm.startPrank(owner);
         deal(address(DAI), owner, assets, true);
         DAI.approve(address(forkedRouter), assets);
-        uint256 shares = forkedRouter.depositAndSwapIntoCellar(
-            ERC4626(address(forkedCellar)),
-            path,
-            poolFees,
-            assets,
-            0,
-            owner
-        );
+        uint256 shares =
+            forkedRouter.depositAndSwapIntoCellar(ERC4626(address(forkedCellar)), path, poolFees, assets, 0, owner);
         vm.stopPrank();
 
         // Assets received by the cellar will be equal to WETH currently in forked cellar because no
@@ -155,14 +149,8 @@ contract CellarRouterTest is Test {
         vm.startPrank(owner);
         deal(address(DAI), owner, assets, true);
         DAI.approve(address(forkedRouter), assets);
-        uint256 shares = forkedRouter.depositAndSwapIntoCellar(
-            ERC4626(address(forkedCellar)),
-            path,
-            poolFees,
-            assets,
-            0,
-            owner
-        );
+        uint256 shares =
+            forkedRouter.depositAndSwapIntoCellar(ERC4626(address(forkedCellar)), path, poolFees, assets, 0, owner);
         vm.stopPrank();
 
         // Assets received by the cellar will be equal to WETH currently in forked cellar because no
@@ -216,12 +204,7 @@ contract CellarRouterTest is Test {
         // Test withdraw and swap.
         cellar.approve(address(router), assetsReceivedAfterDeposit);
         uint256 sharesRedeemed = router.withdrawAndSwapFromCellar(
-            ERC4626(address(cellar)),
-            path,
-            poolFees,
-            assetsReceivedAfterDeposit,
-            0,
-            owner
+            ERC4626(address(cellar)), path, poolFees, assetsReceivedAfterDeposit, 0, owner
         );
         vm.stopPrank();
 

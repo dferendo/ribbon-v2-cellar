@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { ERC20 } from "@solmate/tokens/ERC20.sol";
-import { AaveV2StablecoinCellar } from "src/AaveV2StablecoinCellar.sol";
-import { IAaveIncentivesController } from "src/interfaces/IAaveIncentivesController.sol";
-import { IStakedTokenV2 } from "src/interfaces/IStakedTokenV2.sol";
-import { ICurveSwaps } from "src/interfaces/ICurveSwaps.sol";
-import { ISushiSwapRouter } from "src/interfaces/ISushiSwapRouter.sol";
-import { IGravity } from "src/interfaces/IGravity.sol";
-import { ILendingPool } from "src/interfaces/ILendingPool.sol";
-import { MockERC20 } from "src/mocks/MockERC20.sol";
-import { MockERC20WithTransferFee } from "src/mocks/MockERC20WithTransferFee.sol";
-import { MockAToken } from "src/mocks/MockAToken.sol";
-import { MockSwapRouter } from "src/mocks/MockSwapRouter.sol";
-import { MockLendingPool } from "src/mocks/MockLendingPool.sol";
-import { MockIncentivesController } from "src/mocks/MockIncentivesController.sol";
-import { MockGravity } from "src/mocks/MockGravity.sol";
-import { MockStkAAVE } from "src/mocks/MockStkAAVE.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {AaveV2StablecoinCellar} from "src/AaveV2StablecoinCellar.sol";
+import {IAaveIncentivesController} from "src/interfaces/IAaveIncentivesController.sol";
+import {IStakedTokenV2} from "src/interfaces/IStakedTokenV2.sol";
+import {ICurveSwaps} from "src/interfaces/ICurveSwaps.sol";
+import {ISushiSwapRouter} from "src/interfaces/ISushiSwapRouter.sol";
+import {IGravity} from "src/interfaces/IGravity.sol";
+import {ILendingPool} from "src/interfaces/ILendingPool.sol";
+import {MockERC20} from "src/mocks/MockERC20.sol";
+import {MockERC20WithTransferFee} from "src/mocks/MockERC20WithTransferFee.sol";
+import {MockAToken} from "src/mocks/MockAToken.sol";
+import {MockSwapRouter} from "src/mocks/MockSwapRouter.sol";
+import {MockLendingPool} from "src/mocks/MockLendingPool.sol";
+import {MockIncentivesController} from "src/mocks/MockIncentivesController.sol";
+import {MockGravity} from "src/mocks/MockGravity.sol";
+import {MockStkAAVE} from "src/mocks/MockStkAAVE.sol";
 
-import { Test, console, stdStorage, StdStorage } from "@forge-std/Test.sol";
-import { Math } from "src/utils/Math.sol";
+import {Test, console, stdStorage, StdStorage} from "@forge-std/Test.sol";
+import {Math} from "src/utils/Math.sol";
 
 contract AaveV2StablecoinCellarTest is Test {
     using Math for uint256;
@@ -312,17 +312,11 @@ contract AaveV2StablecoinCellarTest is Test {
         // 4. Alice deposits $2000 (mints 1333 shares).
         vm.prank(alice);
         assertApproxEqAbs(
-            cellar.deposit(2000e6, alice),
-            1333e18,
-            1e18,
-            "4. Alice should have been minted approximately 1333 shares."
+            cellar.deposit(2000e6, alice), 1333e18, 1e18, "4. Alice should have been minted approximately 1333 shares."
         );
         assertApproxEqAbs(cellar.totalSupply(), 7333e18, 1e18, "4. Total supply should be approximately 7333 shares.");
         assertApproxEqAbs(
-            cellar.balanceOf(alice),
-            3333e18,
-            1e18,
-            "4. Alice's share balance should be approximately 3333 shares."
+            cellar.balanceOf(alice), 3333e18, 1e18, "4. Alice's share balance should be approximately 3333 shares."
         );
         assertApproxEqAbs(
             cellar.convertToAssets(cellar.balanceOf(alice)),
@@ -339,10 +333,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertApproxEqAbs(cellar.balanceOf(bob), 6000e18, 1e18, "5. Bob's share balance should be approximately 6000.");
         assertApproxEqAbs(cellar.totalSupply(), 9333e18, 1e18, "5. Total supply should be approximately 9333 shares.");
         assertApproxEqAbs(
-            cellar.balanceOf(alice),
-            3333e18,
-            1e18,
-            "5. Alice's share balance should be approximately 3333 shares."
+            cellar.balanceOf(alice), 3333e18, 1e18, "5. Alice's share balance should be approximately 3333 shares."
         );
         assertApproxEqAbs(
             cellar.convertToAssets(cellar.balanceOf(alice)),
@@ -374,10 +365,7 @@ contract AaveV2StablecoinCellarTest is Test {
             "6. Alice's asset balance should have mutated."
         );
         assertApproxEqAbs(
-            cellar.convertToAssets(cellar.balanceOf(bob)),
-            10929e6,
-            1e6,
-            "6. Bob's asset balance should have mutated."
+            cellar.convertToAssets(cellar.balanceOf(bob)), 10929e6, 1e6, "6. Bob's asset balance should have mutated."
         );
 
         // 7. Alice redeem 1333 shares ($2428).
@@ -392,10 +380,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertApproxEqAbs(cellar.totalSupply(), 8000e18, 1e18, "7. Total supply should be approximately 8000 shares.");
         assertApproxEqAbs(cellar.totalAssets(), 14572e6, 1e6, "7. Total assets should be approximately $14572.");
         assertApproxEqAbs(
-            cellar.balanceOf(alice),
-            2000e18,
-            1e18,
-            "7. Alice's share balance should be approximately 2000."
+            cellar.balanceOf(alice), 2000e18, 1e18, "7. Alice's share balance should be approximately 2000."
         );
         assertApproxEqAbs(
             cellar.convertToAssets(cellar.balanceOf(alice)),
@@ -435,10 +420,7 @@ contract AaveV2StablecoinCellarTest is Test {
         // 9. Alice withdraws $3643 (2000 shares)
         vm.prank(alice);
         assertApproxEqAbs(
-            cellar.withdraw(3643e6, alice, alice),
-            2000e18,
-            1e18,
-            "9. Alice should have withdrawn approximately 2000."
+            cellar.withdraw(3643e6, alice, alice), 2000e18, 1e18, "9. Alice should have withdrawn approximately 2000."
         );
         assertApproxEqAbs(USDC.balanceOf(alice), 6071e6, 1e6, "9. Alice's balance should be approximately $6071.");
         assertApproxEqAbs(cellar.totalSupply(), 4392e18, 1e18, "9. Total supply should be approximately 4392.");
@@ -487,9 +469,7 @@ contract AaveV2StablecoinCellarTest is Test {
         stdstore.target(address(cellar)).sig(cellar.asset.selector).checked_write(address(tokenWithTransferFee));
 
         assertEq(
-            address(cellar.asset()),
-            address(tokenWithTransferFee),
-            "Cellar asset should be token with transfer fee."
+            address(cellar.asset()), address(tokenWithTransferFee), "Cellar asset should be token with transfer fee."
         );
 
         tokenWithTransferFee.mint(address(this), 100e6);
@@ -503,9 +483,7 @@ contract AaveV2StablecoinCellarTest is Test {
         stdstore.target(address(cellar)).sig(cellar.asset.selector).checked_write(address(tokenWithTransferFee));
 
         assertEq(
-            address(cellar.asset()),
-            address(tokenWithTransferFee),
-            "Cellar asset should be token with transfer fee."
+            address(cellar.asset()), address(tokenWithTransferFee), "Cellar asset should be token with transfer fee."
         );
 
         tokenWithTransferFee.mint(address(this), 100e6);
@@ -606,16 +584,10 @@ contract AaveV2StablecoinCellarTest is Test {
         //       (eg. the ~$60 difference here would be divided amongst all depositors).
 
         assertApproxEqAbs(
-            cellar.maxDeposit(address(this)),
-            0,
-            100e6,
-            "Max deposit should not change significantly because of accrue."
+            cellar.maxDeposit(address(this)), 0, 100e6, "Max deposit should not change significantly because of accrue."
         );
         assertApproxEqAbs(
-            cellar.maxMint(address(this)),
-            0,
-            100e18,
-            "Max mint should not change significantly because of accrue."
+            cellar.maxMint(address(this)), 0, 100e18, "Max mint should not change significantly because of accrue."
         );
 
         vm.warp(block.timestamp + cellar.accrualPeriod());
@@ -661,9 +633,7 @@ contract AaveV2StablecoinCellarTest is Test {
         );
 
         assertEq(
-            cellar.maxMint(address(this)),
-            0,
-            "Max mint should not change because of accrue even after accrual period."
+            cellar.maxMint(address(this)), 0, "Max mint should not change because of accrue even after accrual period."
         );
     }
 
@@ -681,8 +651,8 @@ contract AaveV2StablecoinCellarTest is Test {
 
         cellar.setDepositLimit(100e6);
 
-        USDC.mint(address(this), amount * 10**6);
-        cellar.mint(amount * 10**18, address(this));
+        USDC.mint(address(this), amount * 10 ** 6);
+        cellar.mint(amount * 10 ** 18, address(this));
     }
 
     function testFailDepositAboveLiquidityLimit(uint256 amount) external {
@@ -699,8 +669,8 @@ contract AaveV2StablecoinCellarTest is Test {
 
         cellar.setLiquidityLimit(100e6);
 
-        USDC.mint(address(this), amount * 10**6);
-        cellar.mint(amount * 10**18, address(this));
+        USDC.mint(address(this), amount * 10 ** 6);
+        cellar.mint(amount * 10 ** 18, address(this));
     }
 
     // ========================================= ACCRUAL TESTS =========================================
@@ -821,10 +791,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertApproxEqAbs(cellar.totalAssets(), 315e6, 2e6, "5. Total assets should be approximately $315.");
         assertApproxEqAbs(cellar.totalBalance(), 450e6, 2e6, "5. Total balance should be approximately $450.");
         assertApproxEqAbs(
-            cellar.balanceOf(address(cellar)),
-            15e18,
-            1e18,
-            "5. Should have 15 shares of performance fees."
+            cellar.balanceOf(address(cellar)), 15e18, 1e18, "5. Should have 15 shares of performance fees."
         );
         assertEq(cellar.lastAccrual(), lastAccrualTimestamp, "5. Should have changed timestamp of last accrual.");
 
@@ -836,10 +803,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertApproxEqAbs(cellar.totalAssets(), 382.5e6, 2e6, "6. Total assets should be approximately $382.5.");
         assertApproxEqAbs(cellar.totalBalance(), 450e6, 2e6, "6. Total balance should be approximately $450.");
         assertApproxEqAbs(
-            cellar.balanceOf(address(cellar)),
-            15e18,
-            1e18,
-            "6. Should have 15 shares of performance fees."
+            cellar.balanceOf(address(cellar)), 15e18, 1e18, "6. Should have 15 shares of performance fees."
         );
         assertEq(cellar.lastAccrual(), lastAccrualTimestamp, "6. Should not have changed timestamp of last accrual.");
 
@@ -851,10 +815,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertApproxEqAbs(cellar.totalAssets(), 582.5e6, 2e6, "7. Total assets should be approximately $582.5.");
         assertApproxEqAbs(cellar.totalBalance(), 650e6, 2e6, "7. Total balance should be approximately $650.");
         assertApproxEqAbs(
-            cellar.balanceOf(address(cellar)),
-            15e18,
-            1e18,
-            "7. Should have 15 shares of performance fees."
+            cellar.balanceOf(address(cellar)), 15e18, 1e18, "7. Should have 15 shares of performance fees."
         );
         assertEq(cellar.lastAccrual(), lastAccrualTimestamp, "7. Should not have changed timestamp of last accrual.");
 
@@ -865,10 +826,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertApproxEqAbs(cellar.totalAssets(), 650e6, 2e6, "8. Total assets should be approximately $650.");
         assertApproxEqAbs(cellar.totalBalance(), 650e6, 2e6, "8. Total balance should be approximately $650.");
         assertApproxEqAbs(
-            cellar.balanceOf(address(cellar)),
-            15e18,
-            1e18,
-            "8. Should have 15 shares of performance fees."
+            cellar.balanceOf(address(cellar)), 15e18, 1e18, "8. Should have 15 shares of performance fees."
         );
         assertEq(cellar.lastAccrual(), lastAccrualTimestamp, "8. Should not have changed timestamp of last accrual.");
 
@@ -879,10 +837,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertApproxEqAbs(cellar.totalAssets(), 550e6, 2e6, "9. Total assets should be approximately $550.");
         assertApproxEqAbs(cellar.totalBalance(), 550e6, 2e6, "9. Total balance should be approximately $550.");
         assertApproxEqAbs(
-            cellar.balanceOf(address(cellar)),
-            15e18,
-            1e18,
-            "9. Should have 15 shares of performance fees."
+            cellar.balanceOf(address(cellar)), 15e18, 1e18, "9. Should have 15 shares of performance fees."
         );
         assertEq(cellar.lastAccrual(), lastAccrualTimestamp, "9. Should not have changed timestamp of last accrual.");
 
@@ -894,10 +849,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertApproxEqAbs(cellar.totalAssets(), 550e6, 2e6, "10. Total assets should be approximately $550.");
         assertApproxEqAbs(cellar.totalBalance(), 550e6, 2e6, "10. Total balance should be approximately $550.");
         assertApproxEqAbs(
-            cellar.balanceOf(address(cellar)),
-            15e18,
-            1e18,
-            "10. Should have 15 shares of performance fees."
+            cellar.balanceOf(address(cellar)), 15e18, 1e18, "10. Should have 15 shares of performance fees."
         );
         assertEq(cellar.lastAccrual(), lastAccrualTimestamp, "10. Should have changed timestamp of last accrual.");
 
@@ -908,10 +860,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertApproxEqAbs(cellar.totalAssets(), 550e6, 2e6, "11. Total assets should be approximately $550.");
         assertApproxEqAbs(cellar.totalBalance(), 550e6, 2e6, "11. Total balance should be approximately $550.");
         assertApproxEqAbs(
-            cellar.balanceOf(address(cellar)),
-            15e18,
-            1e18,
-            "11. Should have 15 shares of performance fees."
+            cellar.balanceOf(address(cellar)), 15e18, 1e18, "11. Should have 15 shares of performance fees."
         );
         assertEq(cellar.lastAccrual(), lastAccrualTimestamp, "11. Should not have changed timestamp of last accrual.");
 
@@ -922,10 +871,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertApproxEqAbs(cellar.totalAssets(), 400e6, 2e6, "12. Total assets should be approximately $400.");
         assertApproxEqAbs(cellar.totalBalance(), 400e6, 2e6, "12. Total balance should be approximately $400.");
         assertApproxEqAbs(
-            cellar.balanceOf(address(cellar)),
-            15e18,
-            1e18,
-            "12. Should have 15 shares of performance fees."
+            cellar.balanceOf(address(cellar)), 15e18, 1e18, "12. Should have 15 shares of performance fees."
         );
         assertEq(cellar.lastAccrual(), lastAccrualTimestamp, "12. Should have changed timestamp of last accrual.");
     }
@@ -1126,11 +1072,7 @@ contract AaveV2StablecoinCellarTest is Test {
             (highWatermarkBeforeRebalance + totalHoldingsBeforeRebalance).changeDecimals(6, 18),
             "Should have updated high watermark balance."
         );
-        assertEq(
-            priceOfShareAfterRebalance,
-            priceOfShareBeforeRebalance,
-            "Expect price of shares to have not changed."
-        );
+        assertEq(priceOfShareAfterRebalance, priceOfShareBeforeRebalance, "Expect price of shares to have not changed.");
         assertEq(totalAssetsAfterRebalance, totalAssetsBeforeRebalance, "Expect total assets to have not changed.");
 
         // Accrue performance fees on net gains.
@@ -1391,9 +1333,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertEq(cellar.totalAssets(), 910e6, "Should have updated total assets after accrual.");
         assertEq(cellar.totalLocked(), 90e6, "Should have realized gains after accrual.");
         assertEq(
-            priceOfShareBeforeDistrust,
-            priceOfShareAfterDistrust,
-            "Should have not changed price of share immediately."
+            priceOfShareBeforeDistrust, priceOfShareAfterDistrust, "Should have not changed price of share immediately."
         );
     }
 
@@ -1435,9 +1375,7 @@ contract AaveV2StablecoinCellarTest is Test {
         assertEq(cellar.totalAssets(), 910e6);
         assertEq(cellar.totalLocked(), 90e6);
         assertEq(
-            priceOfShareBeforeShutdown,
-            priceOfShareAfterShutdown,
-            "Should have not changed price of share immediately."
+            priceOfShareBeforeShutdown, priceOfShareAfterShutdown, "Should have not changed price of share immediately."
         );
     }
 

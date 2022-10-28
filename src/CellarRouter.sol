@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { ERC20 } from "@solmate/tokens/ERC20.sol";
-import { SafeTransferLib } from "@solmate/utils/SafeTransferLib.sol";
-import { ERC4626 } from "./base/ERC4626.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { ISwapRouter as IUniswapV3Router } from "./interfaces/ISwapRouter.sol";
-import { IUniswapV2Router02 as IUniswapV2Router } from "./interfaces/IUniswapV2Router02.sol";
-import { ICellarRouter } from "./interfaces/ICellarRouter.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {SafeTransferLib} from "@solmate/utils/SafeTransferLib.sol";
+import {ERC4626} from "./base/ERC4626.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ISwapRouter as IUniswapV3Router} from "./interfaces/ISwapRouter.sol";
+import {IUniswapV2Router02 as IUniswapV2Router} from "./interfaces/IUniswapV2Router02.sol";
+import {ICellarRouter} from "./interfaces/ICellarRouter.sol";
 
 import "./Errors.sol";
 
@@ -233,15 +233,7 @@ contract CellarRouter is ICellarRouter, Ownable {
      * @return r a component of the secp256k1 signature
      * @return s a component of the secp256k1 signature
      */
-    function _splitSignature(bytes memory signature)
-        internal
-        pure
-        returns (
-            uint8 v,
-            bytes32 r,
-            bytes32 s
-        )
-    {
+    function _splitSignature(bytes memory signature) internal pure returns (uint8 v, bytes32 r, bytes32 s) {
         if (signature.length != 65) revert USR_InvalidSignature(signature.length, 65);
 
         // Read each parameter directly from the signature's memory region.
@@ -270,12 +262,10 @@ contract CellarRouter is ICellarRouter, Ownable {
      * @param assetsOutMin minimum amount of assets received from swap
      * @return assetsOut amount of assets received after swap
      */
-    function _swap(
-        address[] calldata path,
-        uint24[] calldata poolFees,
-        uint256 assets,
-        uint256 assetsOutMin
-    ) internal returns (uint256 assetsOut) {
+    function _swap(address[] calldata path, uint24[] calldata poolFees, uint256 assets, uint256 assetsOutMin)
+        internal
+        returns (uint256 assetsOut)
+    {
         // Retrieve the asset being swapped.
         ERC20 assetIn = ERC20(path[0]);
 
@@ -288,11 +278,7 @@ contract CellarRouter is ICellarRouter, Ownable {
 
             // Execute the swap.
             uint256[] memory amountsOut = uniswapV2Router.swapExactTokensForTokens(
-                assets,
-                assetsOutMin,
-                path,
-                address(this),
-                block.timestamp + 60
+                assets, assetsOutMin, path, address(this), block.timestamp + 60
             );
 
             assetsOut = amountsOut[amountsOut.length - 1];
@@ -304,8 +290,9 @@ contract CellarRouter is ICellarRouter, Ownable {
 
             // Encode swap parameters.
             bytes memory encodePackedPath = abi.encodePacked(address(assetIn));
-            for (uint256 i = 1; i < path.length; i++)
+            for (uint256 i = 1; i < path.length; i++) {
                 encodePackedPath = abi.encodePacked(encodePackedPath, poolFees[i - 1], path[i]);
+            }
 
             // Execute the swap.
             assetsOut = uniswapV3Router.exactInput(

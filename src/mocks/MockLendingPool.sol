@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { ERC20 } from "@solmate/tokens/ERC20.sol";
-import { MockAToken } from "./MockAToken.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {MockAToken} from "./MockAToken.sol";
 
 contract MockLendingPool {
     mapping(address => address) public aTokens;
@@ -15,21 +15,12 @@ contract MockLendingPool {
         index = _index;
     }
 
-    function deposit(
-        address asset,
-        uint256 amount,
-        address onBehalfOf,
-        uint16
-    ) external {
+    function deposit(address asset, uint256 amount, address onBehalfOf, uint16) external {
         ERC20(asset).transferFrom(onBehalfOf, aTokens[asset], amount);
         MockAToken(aTokens[asset]).mint(onBehalfOf, amount, index);
     }
 
-    function withdraw(
-        address asset,
-        uint256 amount,
-        address to
-    ) external returns (uint256) {
+    function withdraw(address asset, uint256 amount, address to) external returns (uint256) {
         if (amount == type(uint256).max) amount = MockAToken(aTokens[asset]).balanceOf(msg.sender);
 
         MockAToken(aTokens[asset]).burn(msg.sender, to, amount, index);

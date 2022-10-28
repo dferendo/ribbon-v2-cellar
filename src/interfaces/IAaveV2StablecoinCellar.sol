@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { ERC20 } from "@solmate/tokens/ERC20.sol";
-import { IAaveIncentivesController } from "../interfaces/IAaveIncentivesController.sol";
-import { IStakedTokenV2 } from "../interfaces/IStakedTokenV2.sol";
-import { ICurveSwaps } from "../interfaces/ICurveSwaps.sol";
-import { ISushiSwapRouter } from "../interfaces/ISushiSwapRouter.sol";
-import { ILendingPool } from "../interfaces/ILendingPool.sol";
-import { IGravity } from "../interfaces/IGravity.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {IAaveIncentivesController} from "../interfaces/IAaveIncentivesController.sol";
+import {IStakedTokenV2} from "../interfaces/IStakedTokenV2.sol";
+import {ICurveSwaps} from "../interfaces/ICurveSwaps.sol";
+import {ISushiSwapRouter} from "../interfaces/ISushiSwapRouter.sol";
+import {ILendingPool} from "../interfaces/ILendingPool.sol";
+import {IGravity} from "../interfaces/IGravity.sol";
 
 /**
  * @title Interface for AaveV2StablecoinCellar
@@ -211,11 +211,7 @@ interface IAaveV2StablecoinCellar {
 
     function exitPosition(uint256 assets) external;
 
-    function rebalance(
-        address[9] memory route,
-        uint256[3][4] memory swapParams,
-        uint256 minAssetsOut
-    ) external;
+    function rebalance(address[9] memory route, uint256[3][4] memory swapParams, uint256 minAssetsOut) external;
 
     // ========================================= REINVEST LOGIC =========================================
 

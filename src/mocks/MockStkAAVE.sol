@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.15;
 
-import { MockERC20 } from "./MockERC20.sol";
+import {MockERC20} from "./MockERC20.sol";
 
 contract MockStkAAVE is MockERC20 {
     MockERC20 public immutable AAVE; // AAVE
@@ -23,8 +23,7 @@ contract MockStkAAVE is MockERC20 {
         uint256 cooldownStartTimestamp = stakersCooldowns[msg.sender];
         require(block.timestamp > cooldownStartTimestamp + COOLDOWN_SECONDS, "INSUFFICIENT_COOLDOWN");
         require(
-            block.timestamp - (cooldownStartTimestamp + COOLDOWN_SECONDS) <= UNSTAKE_WINDOW,
-            "UNSTAKE_WINDOW_FINISHED"
+            block.timestamp - (cooldownStartTimestamp + COOLDOWN_SECONDS) <= UNSTAKE_WINDOW, "UNSTAKE_WINDOW_FINISHED"
         );
 
         uint256 balanceOfMessageSender = balanceOf[msg.sender];
