@@ -706,7 +706,7 @@ contract CellarStaking is ICellarStaking, Ownable {
      * @notice Gets all of a user's stakes.
      * @dev This is provided because Solidity converts public arrays into index getters,
      *      but we need a way to allow external contracts and users to access the whole array.
-     * 
+     *
      * @param user                      The user whose stakes to get.
      *
      * @return stakes                   Array of all user's stakes
